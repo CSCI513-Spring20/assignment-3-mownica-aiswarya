@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ThreadPooling
@@ -13,11 +14,11 @@ public class ThreadPooling
  private boolean isShutdown = false;
 
  private final LinkedBlockingQueue<Task> q;
-
+ private final ArrayList<Task> Tasks;
  //Constructor of the class
  public ThreadPooling(int poolSize){
  this.poolS = poolSize;
-
+ Tasks = new ArrayList<Task>();
  q = new LinkedBlockingQueue<Task>();
  intTasks = new InternalTask[this.poolS];
  for (int i = 0; i < poolSize; i++) {
@@ -37,7 +38,11 @@ public class ThreadPooling
  boolean Task1 = true;
  while (Task1) {
  Task1 = false;
- 
+ for (Task task : Tasks) {
+	  if (task.getIsFinished() == false) {
+		  Task1 = true;
+	  }
+ }
  try {
  Thread.sleep(100);
  } catch (InterruptedException e) {
@@ -74,6 +79,7 @@ public class ThreadPooling
  try {
  t.run();
  //t.setIsFinished();
+ t.setIsFinished();
  } catch (RuntimeException e) {
  System.out.println("Thread pool is stopped " + e.getMessage());
  }
