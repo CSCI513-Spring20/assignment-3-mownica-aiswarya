@@ -6,7 +6,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ThreadPooling
 {
 
- public ThreadPooling(int poolSize){
+ public ThreadPooling(int poolSize)   //Threads are created
+ {
  this.poolS = poolSize;
  q = new LinkedBlockingQueue<Task>();
  workers = new WorkerTask[this.poolS];
@@ -16,14 +17,16 @@ public class ThreadPooling
 	 }
  }
 
- public void shutdown() {
+ public void shutdown()    		      //closing all threads
+ {
 	 this.isShutdown = true;
      for (int i = 0; i < poolS; i++) {
          workers[i] = null;
      }
  }
  
- public void add(Runnable t) {
+ public void add(Runnable t) 		  // tasks are added to thread
+ {
 	 synchronized (q) {
 		 q.add((Task) t);
 		 q.notify();
@@ -31,7 +34,8 @@ public class ThreadPooling
 	 }
 
 
- private class WorkerTask extends Thread {
+ private class WorkerTask extends Thread   //All tasks are executed
+ {
 	 
 	 public WorkerTask(String s) {
 		 super(s);
@@ -59,9 +63,9 @@ public class ThreadPooling
 	 }
 	 }
  
- private final int poolS;
- private final WorkerTask[] workers;
- private boolean isShutdown = false;
- private final LinkedBlockingQueue<Task> q;
+ private final int poolS;                //Thread pool size
+ private final WorkerTask[] workers;     //Internal pool is an Array
+ private boolean isShutdown = false;     
+ private final LinkedBlockingQueue<Task> q;  //FIFO Ordering
  private final ArrayList<Task> Tasks = new ArrayList<Task>();
 }
