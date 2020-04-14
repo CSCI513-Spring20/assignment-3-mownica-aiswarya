@@ -9,9 +9,9 @@ public class ThreadPooling
  public ThreadPooling(int poolSize){
  this.poolS = poolSize;
  q = new LinkedBlockingQueue<Task>();
- workers = new InternalTask[this.poolS];
+ workers = new WorkerTask[this.poolS];
  for (int i = 0; i < poolSize; i++) {
-	 workers[i] = new InternalTask("Thread " + i);
+	 workers[i] = new WorkerTask("Thread " + i);
 	 workers[i].start();
 	 }
  }
@@ -23,7 +23,7 @@ public class ThreadPooling
      }
  }
  
- public void execute(Runnable t) {
+ public void add(Runnable t) {
 	 synchronized (q) {
 		 q.add((Task) t);
 		 q.notify();
@@ -31,9 +31,9 @@ public class ThreadPooling
 	 }
 
 
- private class InternalTask extends Thread {
+ private class WorkerTask extends Thread {
 	 
-	 public InternalTask(String s) {
+	 public WorkerTask(String s) {
 		 super(s);
 	 }
 	 
@@ -60,7 +60,7 @@ public class ThreadPooling
 	 }
  
  private final int poolS;
- private final InternalTask[] workers;
+ private final WorkerTask[] workers;
  private boolean isShutdown = false;
  private final LinkedBlockingQueue<Task> q;
  private final ArrayList<Task> Tasks = new ArrayList<Task>();
